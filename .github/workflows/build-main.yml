@@ -1,0 +1,79 @@
+name: build main
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2.1.7
+        env:
+          cache-name: cache-mvn
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Build Tag with Maven
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          mvn -B clean verify -Pcoverage -Drevision=${{ github.ref_name }}
+
+      - name: Build Branch with Maven
+        if: ${{ github.ref_type == 'branch' }}
+        run: |
+          mvn -B clean verify -Pcoverage
+
+      - uses: codecov/codecov-action@v2
+        with:
+          files: "**/target/site/jacoco/jacoco.xml"
+
+  publish-snapshot:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up settings.xml for GitHub Packages
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2.1.7
+        env:
+          cache-name: cache-mvn
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Publish SNAPSHOT version to GitHub Packages (we can skip tests, since we only deploy, if the build workflow succeeded)
+        run: mvn -B --no-transfer-progress deploy -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
