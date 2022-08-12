@@ -9,7 +9,7 @@ on:
         default: '1.0.0'
 
 jobs:
-  publish-central-and-pages:
+  publish-central:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Will start a Maven Central upload with version ${{ github.event.inputs.releaseversion }}"
@@ -50,7 +50,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
   publish-github-release:
-    needs: publish-central-and-pages
+    needs: publish-central
     runs-on: ubuntu-latest
 
     steps:
