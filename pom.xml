@@ -11,6 +11,8 @@
 
     <packaging>maven-plugin</packaging>
     <description>Maven plugin to merge multiple json files</description>
+    <name>JsonMerge Maven Plugin</name>
+    <url>https://github.com/codecentric/json-merge-maven-plugin/</url>
 
     <properties>
         <maven.version>3.8.5</maven.version>
