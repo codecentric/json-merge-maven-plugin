@@ -205,4 +205,39 @@
             </build>
         </profile>
     </profiles>
+    <organization>
+        <name>codecentric AG</name>
+        <url>https://www.codecentric.de</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://opensource.org/licenses/Apache-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Thomas Bosch</name>
+            <email>thomas.bosch@codecentric.de</email>
+            <organization>codecentric AG</organization>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/codecentric/json-merge-maven-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/codecentric/json-merge-maven-plugin.git</developerConnection>
+        <url>https://github.com/codecentric/json-merge-maven-plugin</url>
+    </scm>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/codecentric/json-merge-maven-plugin</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>
